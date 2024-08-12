@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="{% static 'market/css/style.css' %}" rel="stylesheet">
 <!--    <link href="{% static 'market/css/bootstrap.min.css' %}" rel="stylesheet">-->
 <!--    <link href="{% static 'market/css/bootstrap.css' %}" rel="stylesheet">-->
 <!--    <link href="{% static 'market/css/bootstrap.rtl.css' %}" rel="stylesheet">-->
@@ -30,25 +31,49 @@
 
 <body>
 <div class="container">
+    <div class="main">
+          <div class="header">
+            <div class="dropdown">
+                <button class="dropbtn">Categories</button>
+                <div class="dropdown-content">
+                    <a href="#">Link 1</a>
+                    <a href="#">Link 2</a>
+                    <a href="#">Link 3</a>
+                </div>
+            </div>
+        <!--    end dropdown-->
+            <div class="search_form">
+            <form >
+                <input type="search" placeholder="Search" aria-label="Search">
+                <button type="submit">Search</button>
+            </form>
+            </div>
+
+            <span class="enter-logo_wrapper">
+                <a href="#">
+                    <img class="enter-logo" src="{% static 'market/images/enter-logo.png' %}">
+                </a>
+            </span>
+
+          </div>
 
 
 
 
 
+          {% block content %}
+          {% endblock %}
+    </div>
+    <footer>
+        <div class="row">
+            <div>
+                <p>Copyright &copy; website 2024</p>
+            </div>
 
+        </div>
 
-
-
+    </footer>
 </div>
-
-
-
-
-
-
-{% block content %}
-
-{% endblock %}
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 <!--<script src="{% static 'market/js/bootstrap.js' %}"></script>-->
