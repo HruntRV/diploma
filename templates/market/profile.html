@@ -1,1 +1,10 @@
 {% extends "market/base.html" %}
+
+{% block content %}
+    <p><b>Username:</b> {{ profile_data.user.username }}</p>
+    <p><b>First name:</b> {{ profile_data.user.first_name }}</p>
+    <p><b>Last name</b> {{ profile_data.user.last_name }}</p>
+    <p><b>Gender:</b> {{ profile_data.gender }}</p>
+    <p><b>Email:</b> {{ profile_data.user.email }}</p>
+    <p><b>Phone:</b> {{ profile_data.phone }}</p>
+{% endblock %}

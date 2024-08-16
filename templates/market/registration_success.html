@@ -1,0 +1,24 @@
+{% extends "market/base.html" %}
+
+{% block content %}
+
+<h1>Congratulation</h1>
+<h1>You are registered</h1>
+
+    <p>You will be redirected to the main page in <span id="countdown">5</span> seconds.</p>
+    <script>
+        let countdownElement = document.getElementById('countdown');
+        let countdown = parseInt(countdownElement.textContent);
+
+        function updateCountdown() {
+            countdown -= 1;
+            countdownElement.textContent = countdown;
+            if (countdown <= 0) {
+                window.location.href = "{% url 'index' %}";
+            }
+        }
+
+        setInterval(updateCountdown, 1000);  // Update every second
+    </script>
+
+{% endblock %}

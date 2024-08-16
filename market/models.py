@@ -8,6 +8,7 @@ class Profile(models.Model):
     phone = models.CharField(max_length=15, blank=True)
     country = models.CharField(max_length=25, blank=True)
     city = models.CharField(max_length=30, blank=True)
+    gender = models.CharField(max_length=6, blank=True)
 
     def __str__(self):
         return self.user.username
