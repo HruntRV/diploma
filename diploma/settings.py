@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'market',
+    'cart',
+    'orders',
 
 ]
 
@@ -132,7 +134,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'market_login'
 LOGOUT_URL = 'market_logout'
+LOGOUT_REDIRECT_URL = 'market:index'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/media/'
 CART_SESSION_ID = 'cart'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # keep the default backend
+    'market.authentication_backends.EmailBackend',  # add your custom backend
+)

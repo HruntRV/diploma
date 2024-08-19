@@ -61,6 +61,16 @@
     cursor: pointer;
 }
 
+.cart-logo_wrapper img {
+    width: 30px;
+    height: 30px;
+}
+
+.cart-logo {
+    width: 30px;
+    height: 30px;
+}
+
 .enter-logo {
     width: 20px;
     height: 20px;
@@ -187,3 +197,5 @@
     top: 80px;
     right: 10px;
 }
+
+

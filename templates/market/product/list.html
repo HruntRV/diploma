@@ -1,0 +1,29 @@
+{% extends "market/base.html" %}
+{% load static %}
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% endblock %}
+{% block content %}
+
+        <h1>{% if category %}{{ category.name }}{% else %}Products{% endif %}</h1>
+        <div class="container">
+            {% for product in products %}
+            <div class="row-block row">
+                <div class="col-md-8">
+                    <a href="{{ product.get_absolute_url }}">
+                        <img class="img-fluid" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+                    </a>
+                </div>
+                <div class="col-md-4 d-flex align-items-center justify-content-center">
+                    <div>
+                    <a href="{{ product.get_absolute_url }}"><h6>{{ product.name }}</h6></a>
+                        <span class="font">{{ product.description }}</span>
+                    </div>
+                </div>
+                <span class="fs-3 price-block">${{ product.price }}</span>
+            </div>
+          {% endfor %}
+        </div>
+
+
+{% endblock %}

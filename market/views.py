@@ -5,7 +5,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.timezone import now
 from django.views import View
-from .models import Profile
+from .models import Profile, Category, Product
+from django.db.models import Q
+from cart.forms import CartAddProductForm
+from market.models import Product, Category
 
 
 def index(request):
@@ -47,4 +50,57 @@ def registration(request):
 def registration_success(request):
     context = {}
     return render(request, 'market/registration_success.html', context)
+
+
+def my_login(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('market:index')  # Redirect to the profile page or any other page
+        else:
+            return HttpResponse("Invalid email or password", status=400)
+
+    return render(request, 'market/login.html')
+
+
+def product_list(request, category_slug=None):
+    category = None
+    categories = Category.objects.all()
+    products = Product.objects.filter(available=True)
+    if category_slug:
+        category = get_object_or_404(Category, slug=category_slug)
+        products = products.filter(category=category)
+    return render(request,
+                  'market/product/list.html',
+                  {'category': category,
+                   'categories': categories,
+                   'products': products})
+
+
+def product_detail(request, id, slug):
+    product = get_object_or_404(Product,
+                                id=id,
+                                slug=slug,
+                                available=True)
+    cart_product_form = CartAddProductForm()
+    return render(request,
+                  'market/product/detail.html',
+                  {'product': product, 'cart_product_form': cart_product_form})
+
+
+def search(request):
+    query = request.GET.get('query')
+    if query:
+        products = Product.objects.filter(
+            Q(category__name__icontains=query) |
+            Q(name__icontains=query) |
+            Q(slug__icontains=query)
+        )
+    else:
+        products = Product.objects.all()
+    context = {'products': products}
+    return render(request, 'market/product/list.html', context)
 
