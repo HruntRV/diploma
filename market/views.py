@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.timezone import now
 from django.views import View
+
+from .forms import ProductFilterForm
 from .models import Profile, Category, Product
 from django.db.models import Q
 from cart.forms import CartAddProductForm
@@ -108,19 +110,25 @@ def search(request):
 def product_list(request, category_slug=None):
     category = None
     products = Product.objects.all()
-    categories = Category.objects.filter(parent__isnull=True)  # Get main categories
+    categories = Category.objects.all()
 
     if category_slug:
         category = Category.objects.get(slug=category_slug)
-        if category.subcategories.exists():
-            # If category has subcategories, get products from all subcategories
-            products = products.filter(category__in=category.subcategories.all())
-        else:
-            # Otherwise, filter by the selected category
-            products = products.filter(category=category)
+        products = products.filter(category=category)
+
+    form = ProductFilterForm(category=category)
+
+    if request.GET:
+        form = ProductFilterForm(request.GET, category=category)
+        if form.is_valid():
+            for field, value in form.cleaned_data.items():
+                if field.startswith('char_') and value:
+                    char_id = field.split('_')[1]
+                    products = products.filter(characteristic_values__characteristic_id=char_id,
+                                               characteristic_values__value=value)
 
     return render(request, 'market/product/list.html',
-                  {'category': category, 'categories': categories, 'products': products})
+                  {'category': category, 'categories': categories, 'products': products, 'form': form})
 
 
 def product_list_by_category(request, slug):

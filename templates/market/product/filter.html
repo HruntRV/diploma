@@ -1,24 +1,5 @@
-<div id="filter-bar" class="sidebar">
-    <form method="GET" action="{% url 'market:product_list' %}">
-        <div class="filter-group">
-            <label for="category">Category:</label>
-            <select name="category" id="category">
-                <option value="">All Categories</option>
-                {% for category in categories %}
-                <option value="{{ category.id }}">{{ category.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="filter-group">
-            <label for="price_min">Min Price:</label>
-            <input type="number" name="price_min" id="price_min">
-        </div>
-        <div class="filter-group">
-            <label for="price_max">Max Price:</label>
-            <input type="number" name="price_max" id="price_max">
-        </div>
-        <div class="filter-group">
-            <button type="submit" class="btn btn-primary">Filter</button>
-        </div>
-    </form>
-</div>
+<form method="get" class="sidebar">
+    {{ form.as_p }}
+    <button type="submit">Filter</button>
+</form>
+
