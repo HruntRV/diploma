@@ -1,28 +1,27 @@
 {% extends "market/base.html" %}
-{% load crispy_forms_tags %}
 {% load static %}
 {% block title %}
 Checkout
 {% endblock %}
 {% block content %}
-<div class="container">
-<h3>Your order</h3>
-<ul>
-    {% for item in cart %}
-    <li>
-        {{ item.quantity }}x {{item.product.name}}
-        <span>${{item.total_price}}</span>
-    </li>
-    {% endfor %}
-</ul>
-<p>Total: $ {{ cart.get_total_price }}</p>
+<div>
+    <h3>Your order</h3>
+    <ul>
+        {% for item in cart %}
+        <li>
+            {{ item.quantity }}x {{item.product.name}}
+            <span>${{item.total_price}}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    <p>Total: $ {{ cart.get_total_price }}</p>
 
-<form action="." method="post" style="width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px;">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <input type="submit" value="Place order">
-</form>
-   {% endblock %}
+    <form action="." method="post" style="width: 350px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Place order">
+    </form>
+       {% endblock %}
 
 </div>
 

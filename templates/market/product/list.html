@@ -1,29 +1,34 @@
 {% extends "market/base.html" %}
 {% load static %}
-{% block title %}
-    {% if category %}{{ category.name }}{% else %}Products{% endif %}
+
+{% block side %}
+    {% include 'market/product/filter.html' %}
 {% endblock %}
 {% block content %}
 
-        <h1>{% if category %}{{ category.name }}{% else %}Products{% endif %}</h1>
-        <div class="container">
-            {% for product in products %}
-            <div class="row-block row">
-                <div class="col-md-8">
-                    <a href="{{ product.get_absolute_url }}">
-                        <img class="img-fluid" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
-                    </a>
-                </div>
-                <div class="col-md-4 d-flex align-items-center justify-content-center">
-                    <div>
-                    <a href="{{ product.get_absolute_url }}"><h6>{{ product.name }}</h6></a>
-                        <span class="font">{{ product.description }}</span>
-                    </div>
-                </div>
-                <span class="fs-3 price-block">${{ product.price }}</span>
-            </div>
-          {% endfor %}
+<div class="group-products-wrap">
+{% for product in products %}
+    <div class="product-item">
+         <a href="{{ product.get_absolute_url }}">
+        <div>
+             <img src="{{ product.images.all.0.image.url }}" alt="image">
         </div>
 
+            <h5>{{ product.name }}</h5>
+        </a>
+        <div class="item-buy">
+            <p>{{ product.price }}</p>
+            <form action="{% url 'cart:cart_add' product.id %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="1">
+                <input type="hidden" name="update" value="false">
+                <button type="submit">Купить</button>
+            </form>
+
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
 
 {% endblock %}

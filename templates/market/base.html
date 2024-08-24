@@ -19,8 +19,7 @@
             <nav class="navigation">
                 <ul>
                     <li><a href="{% url 'market:index' %}">Home</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Categories</a></li>
+                    <li><a href="{% url 'market:product_list' %}">Categories</a></li>
                     <li><a href="#">Contact</a></li>
                 </ul>
             </nav>
@@ -31,7 +30,9 @@
                 </form>
             </div>
 
-            <div class="cart-logo_wrapper">
+            <div class="cart-logo_wrapper position-relative">
+                 <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ cart|length }}</span>
                  <a href="{% url 'cart:cart_detail' %}">
                     <img src="{% static 'market/images/cart.png' %}">
                  </a>
@@ -60,13 +61,9 @@
             {% endif %}
         </header>
 
-        <aside class="sidebar">
-            <ul>
-                <li><a href="#">Category 1</a></li>
-                <li><a href="#">Category 2</a></li>
-                <li><a href="#">Category 3</a></li>
-            </ul>
-        </aside>
+        {% block side %}
+
+        {% endblock %}
 
         <main class="main-content">
 

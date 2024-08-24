@@ -66,18 +66,18 @@ def my_login(request):
     return render(request, 'market/login.html')
 
 
-def product_list(request, category_slug=None):
-    category = None
-    categories = Category.objects.all()
-    products = Product.objects.filter(available=True)
-    if category_slug:
-        category = get_object_or_404(Category, slug=category_slug)
-        products = products.filter(category=category)
-    return render(request,
-                  'market/product/list.html',
-                  {'category': category,
-                   'categories': categories,
-                   'products': products})
+# def product_list(request, category_slug=None):
+#     category = None
+#     categories = Category.objects.all()
+#     products = Product.objects.filter(available=True)
+#     if category_slug:
+#         category = get_object_or_404(Category, slug=category_slug)
+#         products = products.filter(category=category)
+#     return render(request,
+#                   'market/product/list.html',
+#                   {'category': category,
+#                    'categories': categories,
+#                    'products': products})
 
 
 def product_detail(request, id, slug):
@@ -104,3 +104,27 @@ def search(request):
     context = {'products': products}
     return render(request, 'market/product/list.html', context)
 
+
+def product_list(request, category_slug=None):
+    category = None
+    products = Product.objects.all()
+    categories = Category.objects.filter(parent__isnull=True)  # Get main categories
+
+    if category_slug:
+        category = Category.objects.get(slug=category_slug)
+        if category.subcategories.exists():
+            # If category has subcategories, get products from all subcategories
+            products = products.filter(category__in=category.subcategories.all())
+        else:
+            # Otherwise, filter by the selected category
+            products = products.filter(category=category)
+
+    return render(request, 'market/product/list.html',
+                  {'category': category, 'categories': categories, 'products': products})
+
+
+def product_list_by_category(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category__in=category.get_descendants(include_self=True))
+    categories = Category.objects.all()  # Retrieve all categories
+    return render(request, 'market/product/list.html', {'category': category, 'products': products, 'categories': categories})
