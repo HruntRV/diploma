@@ -29,17 +29,48 @@
               </button>
             </div>
 
-        <p>{{ product.description }}</p>
         <p>{{ product.price }}</p>
     </div>
 
-
-    {{ product.description|linebreaks }}
+        {{ product.description|linebreaks }}
             <form action="{% url 'cart:cart_add' product.id %}" method="POST">
                 {% csrf_token %}
                 {{cart_product_form}}
                 <button type="submit" class="btn btn-outline-primary">Add to cart</button>
             </form>
+            <div class="tabs-container">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="nav-Характеристики-tab" data-bs-toggle="tab" data-bs-target="#nav-Характеристики" type="button" role="tab" aria-controls="nav-Характеристики" aria-selected="true">Характеристики</button>
+                        <button class="nav-link" id="nav-Отзывы-tab" data-bs-toggle="tab" data-bs-target="#nav-Отзывы" type="button" role="tab" aria-controls="nav-Отзывы" aria-selected="false">Отзывы</button>
+                        <button class="nav-link" id="nav-Задать_вопрос-tab" data-bs-toggle="tab" data-bs-target="#nav-Задать_вопрос" type="button" role="tab" aria-controls="nav-Задать_вопрос" aria-selected="false">Задать вопрос</button>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-Характеристики" role="tabpanel" aria-labelledby="nav-Характеристики-tab" tabindex="0">
+                         <div class="product-characteristic">
+                            <table class="table table-striped">
+                                <tbody>
+                                {% for characteristic_value in characteristic_values %}
+                                    <tr>
+                                        <td>{{characteristic_value.characteristic}}</td>
+                                        <td>{{characteristic_value.value}}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-Отзывы" role="tabpanel" aria-labelledby="nav-Отзывы-tab" tabindex="0">
+                        Отзывы
+                    </div>
+                    <div class="tab-pane fade" id="nav-Задать_вопрос" role="tabpanel" aria-labelledby="nav-Задать_вопрос-tab" tabindex="0">
+                        Вопрос
+                    </div>
+
+                </div>
+            </div>
 
 {% endblock %}
 <!--<div class="container row-block">-->

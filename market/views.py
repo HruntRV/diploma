@@ -7,7 +7,7 @@ from django.utils.timezone import now
 from django.views import View
 
 from .forms import ProductFilterForm
-from .models import Profile, Category, Product
+from .models import Profile, Category, Product, ProductCharacteristicValue
 from django.db.models import Q
 from cart.forms import CartAddProductForm
 from market.models import Product, Category
@@ -88,9 +88,11 @@ def product_detail(request, id, slug):
                                 slug=slug,
                                 available=True)
     cart_product_form = CartAddProductForm()
+    characteristic_values = ProductCharacteristicValue.objects.filter(product=product)
+
     return render(request,
                   'market/product/detail.html',
-                  {'product': product, 'cart_product_form': cart_product_form})
+                  {'product': product, 'cart_product_form': cart_product_form, 'characteristic_values': characteristic_values})
 
 
 def search(request):
@@ -136,3 +138,7 @@ def product_list_by_category(request, slug):
     products = Product.objects.filter(category__in=category.get_descendants(include_self=True))
     categories = Category.objects.all()  # Retrieve all categories
     return render(request, 'market/product/list.html', {'category': category, 'products': products, 'categories': categories})
+
+
+def categories_list(request):
+    return render(request, 'market/product/categories_list.html')

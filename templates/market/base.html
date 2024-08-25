@@ -19,7 +19,7 @@
             <nav class="navigation">
                 <ul>
                     <li><a href="{% url 'market:index' %}">Home</a></li>
-                    <li><a href="{% url 'market:product_list' %}">Categories</a></li>
+                    <li><a href="{% url 'market:categories_list' %}">Categories</a></li>
                     <li><a href="#">Contact</a></li>
                 </ul>
             </nav>
@@ -61,9 +61,29 @@
             {% endif %}
         </header>
 
-        {% block side %}
+        <aside class="sidebar">
+            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                {% for category in categories %}
+                    {% if category.parent is None %}
+                        <div class="btn-group dropend" role="group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ category.name }}
+                            </button>
+                            <ul class="dropdown-menu">
+                                {% for subcategory in category.subcategories.all %}
+                                    {% if subcategory.parent == category %}
+                                        <li><a class="dropdown-item" href="{% url 'market:product_list_by_category' subcategory.slug %}">{{subcategory.name}}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% block sidefilter %}
+            {% endblock %}
+        </aside>
 
-        {% endblock %}
 
         <main class="main-content">
 
@@ -115,7 +135,6 @@
                     <input type="email" name="email" required>
                     <label>Password</label>
                     <input type="password" name="password" required>
-
                     <button type="submit">Sign In</button>
                 </form>
             </div>

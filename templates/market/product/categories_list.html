@@ -1,0 +1,18 @@
+{% extends "market/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="group-products-wrap">
+
+    {% for category in categories %}
+
+    <div class="category-wrap">
+        <a href="{{category.get_absolute_url}}">
+    <img src="#" alt="category_img">
+    <p>{{category.name}}</p>
+        </a>
+</div>
+{% endfor %}
+</div>
+
+{% endblock %}
