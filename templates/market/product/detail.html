@@ -5,7 +5,6 @@
 
 {% block content %}
 
-
     <div class="product-wrap" style="width: 50%">
         <a href="{{ product.get_absolute_url }}">
         <h2>{{ product.name }}</h2>
@@ -31,19 +30,25 @@
 
         <p>{{ product.price }}</p>
     </div>
-
         {{ product.description|linebreaks }}
             <form action="{% url 'cart:cart_add' product.id %}" method="POST">
                 {% csrf_token %}
                 {{cart_product_form}}
                 <button type="submit" class="btn btn-outline-primary">Add to cart</button>
+                <a href="javascript:void(0);" class="wishlist-icon {% if in_wishlist %}added-to-wishlist{% endif %}" data-product-id="{{ product.id }}">
+                     <img class="fa-fa-heart" src="{% static 'market/images/heart.png' %}">
+                </a>
             </form>
             <div class="tabs-container">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <button class="nav-link active" id="nav-Характеристики-tab" data-bs-toggle="tab" data-bs-target="#nav-Характеристики" type="button" role="tab" aria-controls="nav-Характеристики" aria-selected="true">Характеристики</button>
-                        <button class="nav-link" id="nav-Отзывы-tab" data-bs-toggle="tab" data-bs-target="#nav-Отзывы" type="button" role="tab" aria-controls="nav-Отзывы" aria-selected="false">Отзывы</button>
-                        <button class="nav-link" id="nav-Задать_вопрос-tab" data-bs-toggle="tab" data-bs-target="#nav-Задать_вопрос" type="button" role="tab" aria-controls="nav-Задать_вопрос" aria-selected="false">Задать вопрос</button>
+                        <button class="nav-link" id="nav-Отзывы-tab" data-bs-toggle="tab" data-bs-target="#nav-Отзывы" type="button" role="tab" aria-controls="nav-Отзывы" aria-selected="false">
+                            Отзывы <span class="badge text-bg-secondary">{{ comments|length }}</span>
+                        </button>
+                        <button class="nav-link" id="nav-Задать_вопрос-tab" data-bs-toggle="tab" data-bs-target="#nav-Задать_вопрос" type="button" role="tab" aria-controls="nav-Задать_вопрос" aria-selected="false">
+                            Вопросы <span class="badge text-bg-secondary">{{ questions|length }}</span>
+                        </button>
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
@@ -63,26 +68,71 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-Отзывы" role="tabpanel" aria-labelledby="nav-Отзывы-tab" tabindex="0">
-                        Отзывы
+                        {% if user.is_authenticated %}
+                        <!-- Comments Form -->
+                        <form class="well" role="form" name="query" action="{% url 'market:product_detail' product.id product.slug %}" method="POST">
+                            {% csrf_token %}
+                            <h4>Оставить отзыв:</h4>
+                            <div class="form-group">
+                                {{form.as_p}}
+                            </div>
+                            <button type="submit" name="comment_form" value="save" class="btn btn-primary">Оставить</button>
+                        </form>
+                        {% else %}
+                        <h5>Зарегистрируйтесь или войдите чтобы оставить отзыв</h5>
+                        {% endif %}
+                        {% for comment in comments %}
+                        <div class="media">
+                            <a class="pull-left" href="#">
+                                <img class="media-object" src="http://placehold.it/64x64" alt="">
+                            </a>
+                            <div class="media-body">
+                                <h4 class="media-heading">{{ comment.author }}
+                                    <small>{{ comment.published_date }}</small>
+                                </h4>
+                                {{ comment.content }}
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                     <div class="tab-pane fade" id="nav-Задать_вопрос" role="tabpanel" aria-labelledby="nav-Задать_вопрос-tab" tabindex="0">
-                        Вопрос
+                        {% if user.is_authenticated %}
+                        <form class="well" role="form" name="query" action="{% url 'market:product_detail' product.id product.slug %}" method="POST">
+                            {% csrf_token %}
+                            <h4>Задать вопрос:</h4>
+                            <div class="form-group">
+                                {{qform.as_p}}
+                            </div>
+                            <button type="submit" name="question_form" value="save" class="btn btn-primary">Задать</button>
+                        </form>
+                        {% else %}
+                        <h5>Зарегистрируйтесь или войдите чтобы задать вопрос</h5>
+                        {% endif %}
+                        {% for question in questions %}
+                        <div class="media">
+                            <a class="pull-left" href="#">
+                                <img class="media-object" src="http://placehold.it/64x64" alt="">
+                            </a>
+                            <div class="media-body">
+                                <h4 class="media-heading">{{ question.author }}
+                                    <small>{{ question.published_date }}</small>
+                                </h4>
+                                {{ question.content }}
+                                {% if question.answer %}
+                                <div class="media mt-2">
+                                    <div class="media-body">
+                                        <strong>Admin Answer:</strong>
+                                        <p>{{ question.answer }}</p>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
 
                 </div>
             </div>
 
 {% endblock %}
-<!--<div class="container row-block">-->
-<!--        <span class="container"><h1>{{ product.name }}</h1></span>-->
-<!--        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">-->
 
-<!--        <h6><a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a></h6>-->
-<!--        <p class="price"><h4>${{ product.price }}</h4></p>-->
-<!--        {{ product.description|linebreaks }}-->
-<!--        <form action="{% url 'cart:cart_add' product.id %}" method="POST">-->
-<!--            {% csrf_token %}-->
-<!--            {{cart_product_form}}-->
-<!--            <button type="submit" class="btn btn-outline-primary">Add to cart</button>-->
-<!--        </form>-->
-<!--    </div>-->

@@ -24,14 +24,14 @@
                 </ul>
             </nav>
             <div class="search">
-                <form>
-                    <input type="text" placeholder="Search">
+                <form method="GET" action="{% url 'market:search' %}">
+                    <input type="text" name="query" placeholder="Search">
                     <button type="submit">Search</button>
                 </form>
             </div>
 
             <div class="cart-logo_wrapper position-relative">
-                 <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger">
+                 <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-info">
                     {{ cart|length }}</span>
                  <a href="{% url 'cart:cart_detail' %}">
                     <img src="{% static 'market/images/cart.png' %}">
@@ -145,8 +145,14 @@
                 <ul>
                     <li><a href="{% url 'market:profile' %}">Profile info</a><li>
                     <li>Purchase history</li>
-                    <li>Wishlist</li>
-                    <li><a href="{% url 'market:market_logout' %}">Logout</a></li>
+
+                    <li><a href="{% url 'market:wishlist' %}">Wishlist</a></li>
+                    <li>
+                        <form action="{% url 'market:market_logout'  %}" method="post">
+                            {% csrf_token %}
+                            <button class="logout-btn" type="submit">Logout</button>
+                        </form>
+                    </li>
                 </ul>
             </div>
             {% block content %}
@@ -198,6 +204,36 @@
             }
         }
 <!--profile menu display block-->
+
+document.addEventListener('DOMContentLoaded', function () {
+    const wishlistIcons = document.querySelectorAll('.wishlist-icon');
+
+    wishlistIcons.forEach(icon => {
+        icon.addEventListener('click', function () {
+            const productId = this.dataset.productId;
+            const url = `/wishlist/add/${productId}/`;
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'added') {
+                    this.classList.add('added-to-wishlist');
+                } else if (data.status === 'removed') {
+                    this.classList.remove('added-to-wishlist');
+                } else if (data.status === 'not_authenticated') {
+                    alert('Please log in to add items to your wishlist.');
+                }
+            });
+        });
+    });
+});
+
+
     </script>
 
 </body>

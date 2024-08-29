@@ -1,6 +1,8 @@
 from django.contrib import admin
-from .models import Profile
-from .models import Category, Product, ProductImage, Characteristic, ProductCharacteristicValue
+from django.utils.html import format_html
+
+from .models import Profile, Question, WishList
+from .models import Category, Product, ProductImage, Characteristic, ProductCharacteristicValue, Comment
 
 admin.site.register(Profile)
 
@@ -26,9 +28,27 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline]
 
 
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('product', 'author', 'published_date', 'content', 'answer')
+    search_fields = ('content', 'answer')
+
+
+@admin.register(WishList)
+class WishListAdmin(admin.ModelAdmin):
+    list_display = ('user', 'display_products')
+
+    def display_products(self, obj):
+        return format_html("<br>".join([product.name for product in obj.products.all()]))
+
+    display_products.short_description = 'Products'
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Characteristic)
 admin.site.register(ProductCharacteristicValue)
+admin.site.register(Comment)
+
 
 
 

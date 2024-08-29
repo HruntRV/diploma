@@ -7,7 +7,7 @@ from django.utils.text import slugify
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='user_avatar')
-    phone = models.CharField(max_length=15, blank=True)
+    phone = models.CharField(max_length=15, blank=True, unique=True)
     country = models.CharField(max_length=25, blank=True)
     city = models.CharField(max_length=30, blank=True)
     gender = models.CharField(max_length=6, blank=True)
@@ -53,7 +53,9 @@ class Product(models.Model):
 
     class Meta:
         ordering = ('name',)
-        index_together = (('id', 'slug'),)
+        indexes = [
+            models.Index(fields=['id', 'slug']),
+        ]
 
     def __str__(self):
         return self.name
@@ -78,6 +80,27 @@ class ProductImage(models.Model):
         return f"Image for {self.product.name}"
 
 
+class Comment(models.Model):
+    product = models.ForeignKey('Product', related_name='comment', on_delete=models.CASCADE)
+    published_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата публікації')
+    content = models.TextField(verbose_name='Коментар')
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, default=1)
+
+    def __str__(self):
+        return f"Comment for {self.product.name}"
+
+
+class Question(models.Model):
+    product = models.ForeignKey('Product', related_name='question', on_delete=models.CASCADE)
+    published_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата публікації')
+    content = models.TextField(verbose_name='Коментар')
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, default=1)
+    answer = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Question for {self.product.name}"
+
+
 class Characteristic(models.Model):
     category = models.ForeignKey('Category', related_name='characteristics', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
@@ -94,3 +117,12 @@ class ProductCharacteristicValue(models.Model):
 
     def __str__(self):
         return f"{self.characteristic.name}: {self.value} {self.characteristic.unit or ''}"
+
+
+class WishList(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    products = models.ManyToManyField('Product', related_name='wishlists')
+
+
+
+

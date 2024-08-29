@@ -1,0 +1,72 @@
+{% extends 'market/base.html' %}
+
+{% block content %}
+<h2>Update your data</h2>
+
+
+<form method="POST" action="{% url 'market:update_profile' %}" enctype='multipart/form-data'>
+        {% csrf_token %}
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+    </div>
+    <div class="form-group col-md-6">
+       {{ form.email.label_tag }}
+        {{ form.email }}
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+        {{ form.first_name.label_tag }}
+         {{ form.first_name }}
+    </div>
+    <div class="form-group col-md-6">
+           {{ form.last_name.label_tag }}
+            {{ form.last_name }}
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+             {{ form.password.label_tag }}
+            {{ form.password }}
+    </div>
+    <div class="form-group col-md-6">
+             {{ form.Password_confirm.label_tag }}
+            {{ form.Password_confirm }}
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+             {{ form.Gender.label_tag }}
+            {{ form.Gender }}
+    </div>
+    <div class="form-group col-md-6">
+             {{ form.Phone.label_tag }}
+            {{ form.Phone }}
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+             {{ form.Country.label_tag }}
+            {{ form.Country }}
+    </div>
+    <div class="form-group col-md-6">
+             {{ form.City.label_tag }}
+            {{ form.City }}
+    </div>
+  </div>
+
+    <div class="form-group">
+            {{ form.Avatar.label_tag }}
+            {{ form.Avatar }}
+    </div>
+
+    <button type="submit">Update</button>
+</form>
+{% endblock %}

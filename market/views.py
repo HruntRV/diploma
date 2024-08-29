@@ -3,11 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
 from django.utils.timezone import now
 from django.views import View
 
-from .forms import ProductFilterForm
-from .models import Profile, Category, Product, ProductCharacteristicValue
+from .forms import ProductFilterForm, CommentForm, QuestionForm, UpdateForm
+from .models import Profile, Category, Product, ProductCharacteristicValue, Comment, Question, WishList
 from django.db.models import Q
 from cart.forms import CartAddProductForm
 from market.models import Product, Category
@@ -87,12 +88,48 @@ def product_detail(request, id, slug):
                                 id=id,
                                 slug=slug,
                                 available=True)
+    wish_list_product = Product.objects.all()
+    user = request.user
+    wishlist = WishList.objects.filter(user=user).first()
+    in_wishlist = wishlist and wishlist.products.filter(id=product.id).exists()
+
+    comments = Comment.objects.filter(product=product).order_by('-published_date')
+    questions = Question.objects.filter(product=product).order_by('-published_date')
+    if request.method == 'POST':
+        if 'comment_form' in request.POST:
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.product = product
+                comment.author = request.user.profile
+                comment.save()
+                return redirect('market:product_detail', id=product.id, slug=product.slug)
+        elif 'question_form' in request.POST:
+            qform = QuestionForm(request.POST)
+            if qform.is_valid():
+                question = qform.save(commit=False)
+                question.product = product
+                question.author = request.user.profile
+                question.save()
+                return redirect('market:product_detail', id=product.id, slug=product.slug)
+    else:
+        form = CommentForm()
+        qform = QuestionForm()
+
     cart_product_form = CartAddProductForm()
     characteristic_values = ProductCharacteristicValue.objects.filter(product=product)
 
-    return render(request,
-                  'market/product/detail.html',
-                  {'product': product, 'cart_product_form': cart_product_form, 'characteristic_values': characteristic_values})
+    context = {
+        'characteristic_values': characteristic_values,
+        'cart_product_form': cart_product_form,
+        'product': product,
+        'comments': comments,
+        'questions': questions,
+        'form': form,
+        'qform': qform,
+        'in_wishlist': in_wishlist
+    }
+    return render(request, 'market/product/detail.html', context)
 
 
 def search(request):
@@ -142,3 +179,72 @@ def product_list_by_category(request, slug):
 
 def categories_list(request):
     return render(request, 'market/product/categories_list.html')
+
+
+def update_profile(request):
+    user = request.user
+    profile = Profile.objects.get(user=user)
+    if request.method == 'POST':
+        form = UpdateForm(request.POST, request.FILES, instance=request.user)
+
+        if form.is_valid():
+            user_form = form.save(commit=False)
+            user_form.save()
+            profile.gender = form.cleaned_data['Gender']
+            profile.phone = form.cleaned_data['Phone']
+            profile.country = form.cleaned_data['Country']
+            profile.city = form.cleaned_data['City']
+            profile.avatar = form.cleaned_data['Avatar']
+            profile.save()
+
+            if form.cleaned_data['password']:
+                user.set_password(form.cleaned_data['password'])
+                user.save()
+                update_session_auth_hash(request, user)
+
+            return redirect('market:profile')
+    else:
+        initial_data = {
+            'Gender': profile.gender,
+            'Phone': profile.phone,
+            'Country': profile.country,
+            'City': profile.city,
+        }
+        form = UpdateForm(instance=user, initial=initial_data)
+
+        context = {'form': form}
+        return render(request, "market/update_profile.html", context)
+
+
+def wishlist(request):
+    user = request.user
+    wishlist = get_object_or_404(WishList, user=user)
+    products = wishlist.products.all()
+    context = {'products': products}
+    return render(request, "market/product/list.html", context)
+
+
+# def add_to_wishlist(request, product_id):
+#     if request.user.is_authenticated:
+#         product = get_object_or_404(Product, id=product_id)
+#         wishlist, created = WishList.objects.get_or_create(user=request.user)
+#         if product not in wishlist.products.all():
+#             wishlist.products.add(product)
+#             return JsonResponse({'status': 'added'}, status=200)
+#         else:
+#             wishlist.products.remove(product)
+#             return JsonResponse({'status': 'removed'}, status=200)
+#     return JsonResponse({'status': 'not_authenticated'}, status=403)
+@login_required
+def add_to_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    wishlist, created = WishList.objects.get_or_create(user=request.user)
+
+    if wishlist.products.filter(id=product.id).exists():
+        wishlist.products.remove(product)
+        status = 'removed'
+    else:
+        wishlist.products.add(product)
+        status = 'added'
+
+    return JsonResponse({'status': status})
