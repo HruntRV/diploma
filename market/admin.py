@@ -10,6 +10,7 @@ admin.site.register(Profile)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}
+    list_filter = ['parent']
 
 
 admin.site.register(Category, CategoryAdmin)
@@ -26,6 +27,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ['price', 'stock', 'available']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline]
+    search_fields = ['name', 'slug', 'description', 'category__name']
 
 
 @admin.register(Question)
@@ -44,9 +46,18 @@ class WishListAdmin(admin.ModelAdmin):
     display_products.short_description = 'Products'
 
 
+@admin.register(Characteristic)
+class Characteristic(admin.ModelAdmin):
+    search_fields = ('name',)
+
+
+@admin.register(ProductCharacteristicValue)
+class ProductCharacteristicValue(admin.ModelAdmin):
+    list_filter = ['product', 'characteristic']
+    search_fields = ('characteristic__name',)
+
+
 admin.site.register(Product, ProductAdmin)
-admin.site.register(Characteristic)
-admin.site.register(ProductCharacteristicValue)
 admin.site.register(Comment)
 
 

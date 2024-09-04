@@ -1,0 +1,90 @@
+{% extends "market/base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+.contain {
+    width: 400px;
+    margin: 10px 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.mail-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+</style>
+<h3 style="border-bottom: 4px solid #293859">Контактная информация</h3>
+<div style="display: flex; flex-wrap: wrap;">
+<div class="contain">
+    <h5>Консультации и заказы:</h5>
+    <h5>0-800-305-005</h5>
+    Бесплатно со стационарных и
+    мобильных телефонов в Украине
+    <br>
+
+(067) 000-00-00 <br>
+(050) 111-11-11 <br>
+(063) 222-22-22 <br>
+support@web.ua
+</div>
+
+    <div class="contain">
+        <h3>Связаться с нами</h3>
+        <form method="POST" action="{% url 'market:contact' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Имя:</label>
+                <input type="text" placeholder="Введите Ваше имя" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Почта:</label>
+                <input type="email" placeholder="example@mail.com" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Сообщение:</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <button class="mail-button" type="submit">Отправить</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "market/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- Promotional Banner -->
+<div class="banner">
+    <img src="{% static 'market/images/banner.jpg' %}" alt="Promotional Banner" class="img-fluid">
+</div>
+
+<!-- Categories Overview -->
+<div class="group-products-wrap">
+
+        {% for product in products %}
+        <div class="product-item">
+            <a href="{{ product.get_absolute_url }}">
+                <img src="{{ product.images.all.0.image.url }}" alt="{{ product.name }}">
+                <p>{{ product.name }}</p>
+            </a>
+        </div>
+        {% endfor %}
+
+</div>
+
+
+{% endblock %}
+

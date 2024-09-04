@@ -1,6 +1,7 @@
 from django.contrib.auth import logout, login, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
@@ -12,11 +13,46 @@ from .models import Profile, Category, Product, ProductCharacteristicValue, Comm
 from django.db.models import Q
 from cart.forms import CartAddProductForm
 from market.models import Product, Category
+from django.conf import settings
 
 
-def index(request):
-    context = {}
-    return render(request, 'market/index.html', context)
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')  # User's name
+        user_email = request.POST.get('email')  # User's email address
+        message = request.POST.get('message')  # User's message
+
+        # Compose the email to yourself
+        subject = f"Contact form submission from {name}"
+        message_body = f"Name: {name}\nEmail: {user_email}\n\nMessage:\n{message}"
+
+        # Send the email to yourself
+        send_mail(
+            subject,
+            message_body,
+            user_email,  # From: user's email address
+            [settings.DEFAULT_FROM_EMAIL],  # To: your email address (elerom.dp@gmail.com)
+            fail_silently=False,
+        )
+        confirmation_subject = "Thank you for contacting us"
+        confirmation_message = f"Hi {name},\n\nThank you for reaching out. We have received your message and will get back to you soon."
+
+        send_mail(
+            confirmation_subject,
+            confirmation_message,
+            settings.DEFAULT_FROM_EMAIL,  # From: your email address (elerom.dp@gmail.com)
+            [user_email],  # To: user's email address
+            fail_silently=False,
+        )
+
+        return HttpResponse("Thank you for your message. We will get back to you soon.")
+
+    return render(request, 'market/contact.html')
+
+
+def home(request):
+    products = Product.objects.all()
+    return render(request, 'market/home.html', {'products': products})
 
 
 @login_required
@@ -62,36 +98,25 @@ def my_login(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('market:index')  # Redirect to the profile page or any other page
+            return redirect('market:home')
         else:
             return HttpResponse("Invalid email or password", status=400)
 
-    return render(request, 'market/login.html')
-
-
-# def product_list(request, category_slug=None):
-#     category = None
-#     categories = Category.objects.all()
-#     products = Product.objects.filter(available=True)
-#     if category_slug:
-#         category = get_object_or_404(Category, slug=category_slug)
-#         products = products.filter(category=category)
-#     return render(request,
-#                   'market/product/list.html',
-#                   {'category': category,
-#                    'categories': categories,
-#                    'products': products})
+    return render(request, 'market/home.html')
 
 
 def product_detail(request, id, slug):
+    # wishlist = None
+    in_wishlist = False
     product = get_object_or_404(Product,
                                 id=id,
                                 slug=slug,
                                 available=True)
-    wish_list_product = Product.objects.all()
+    # wish_list_product = Product.objects.all()
     user = request.user
-    wishlist = WishList.objects.filter(user=user).first()
-    in_wishlist = wishlist and wishlist.products.filter(id=product.id).exists()
+    if user.is_authenticated:
+        wishlist = WishList.objects.filter(user=user).first()
+        in_wishlist = wishlist and wishlist.products.filter(id=product.id).exists()
 
     comments = Comment.objects.filter(product=product).order_by('-published_date')
     questions = Question.objects.filter(product=product).order_by('-published_date')
@@ -248,3 +273,6 @@ def add_to_wishlist(request, product_id):
         status = 'added'
 
     return JsonResponse({'status': status})
+
+
+

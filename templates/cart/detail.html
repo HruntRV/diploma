@@ -3,16 +3,16 @@
 
 {% block content %}
 <div class="container-fluid row-block">
-<h1>Your shopping cart</h1>
+<h1>Корзина</h1>
 <table class="table">
     <thead>
     <tr>
-        <th scope="col">Image</th>
-        <th scope="col">Product</th>
-        <th scope="col">Quantity</th>
-        <th scope="col">Remove</th>
-        <th scope="col">Unit</th>
-        <th scope="col">Price</th>
+        <th scope="col">Изображение</th>
+        <th scope="col">Товар</th>
+        <th scope="col">Количество</th>
+        <th scope="col">Удалить</th>
+        <th scope="col">Цена</th>
+        <th scope="col">Сумма</th>
     </tr>
     </thead>
     <tbody>
@@ -28,22 +28,22 @@
         </td>
 <td style="text-align: center; vertical-align: middle;">{{product.name}}</td>
 <td style="text-align: center; vertical-align: middle;">{{item.quantity}}</td>
-<td style="text-align: center; vertical-align: middle;"><a href="{% url 'cart:cart_remove' product.id %}">Remove</a></td>
-<td style="text-align: center; vertical-align: middle;">${{item.price}}</td>
-<td style="text-align: center; vertical-align: middle;">${{item.total_price}}</td>
+<td style="text-align: center; vertical-align: middle;"><a href="{% url 'cart:cart_remove' product.id %}">Удалить</a></td>
+<td style="text-align: center; vertical-align: middle;">{{item.price}}</td>
+<td style="text-align: center; vertical-align: middle;">{{item.total_price}}</td>
 </tr>
 {% endwith %}
 {% endfor %}
 <tr class="total">
-    <td><b>Total</b></td>
+    <td><b>Всего:</b></td>
     <td colspan="4"></td>
-    <td class="num"><b>${{ cart.get_total_price }}</b></td>
+    <td class="num"><b>{{ cart.get_total_price }} грн</b></td>
 </tr>
 </tbody>
 </table>
 <p class="text-right">
-    <a href="{% url 'market:product_list' %}" class="button light">Continue shopping</a>
-    <a href="{% url 'orders:order_create' %}" class="button">Checkout</a>
+    <a href="{% url 'market:product_list' %}" class="button light">Продолжить покупки</a>
+    <a href="{% url 'orders:order_create' %}" class="button">Оформить заказ</a>
 </p>
 </div>
 {% endblock %}

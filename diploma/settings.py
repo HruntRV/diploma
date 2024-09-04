@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'market.context_processors.categories',
+                'cart.context_processors.cart',
             ],
         },
     },
@@ -132,10 +133,10 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'market_login'
 LOGOUT_URL = 'market_logout'
-LOGOUT_REDIRECT_URL = 'market:index'
+LOGOUT_REDIRECT_URL = 'market:home'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/media/'
@@ -145,3 +146,13 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  # keep the default backend
     'market.authentication_backends.EmailBackend',  # add your custom backend
 )
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = 'elerom.dp@gmail.com'
+EMAIL_HOST_PASSWORD = 'wcdkxvduwjllrswh'
+DEFAULT_FROM_EMAIL = 'elerom.dp@gmail.com'

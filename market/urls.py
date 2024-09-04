@@ -4,7 +4,9 @@ from .import views
 
 
 urlpatterns = [
-    path('', views.index, name="index"),
+    path('', views.home, name="home"),
+    path('home', views.home, name="home"),
+    path('contact/', views.contact, name="contact"),
     path('login', views.my_login, name='market_login'),
     path('logout', LogoutView.as_view(), name='market_logout'),
     path('registration', views.registration, name='registration'),

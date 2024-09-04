@@ -9,11 +9,17 @@ from .forms import CartAddProductForm
 def cart_add(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
-    form = CartAddProductForm(request.POST)
+    form = CartAddProductForm(request.POST, product=product)
     if form.is_valid():
         cd = form.cleaned_data
         cart.add(product=product, quantity=cd['quantity'], update_quantity=cd['update'])
-    return redirect('cart:cart_detail')
+        return redirect('cart:cart_detail')
+    else:
+        return render(request, 'market/product/detail.html', {
+            'product': product,
+            'form': form,
+            'cart_product_form': form,
+        })
 
 
 def cart_detail(request):

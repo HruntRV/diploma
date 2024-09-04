@@ -16,16 +16,21 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+    class Meta:
+        verbose_name = 'Профиль'
+        verbose_name_plural = 'Профили'
+
 
 class Category(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True, unique=True)
+    image = models.ImageField(upload_to='category_image', blank=True)
     parent = models.ForeignKey('self', related_name='subcategories', on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:
         ordering = ('name',)
-        verbose_name = 'Category'
-        verbose_name_plural = 'Categories'
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
     def __str__(self):
         return self.name
@@ -56,6 +61,8 @@ class Product(models.Model):
         indexes = [
             models.Index(fields=['id', 'slug']),
         ]
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
 
     def __str__(self):
         return self.name
@@ -82,23 +89,31 @@ class ProductImage(models.Model):
 
 class Comment(models.Model):
     product = models.ForeignKey('Product', related_name='comment', on_delete=models.CASCADE)
-    published_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата публікації')
-    content = models.TextField(verbose_name='Коментар')
+    published_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
+    content = models.TextField(verbose_name='Контент')
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return f"Comment for {self.product.name}"
 
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
 
 class Question(models.Model):
     product = models.ForeignKey('Product', related_name='question', on_delete=models.CASCADE)
-    published_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата публікації')
-    content = models.TextField(verbose_name='Коментар')
+    published_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
+    content = models.TextField(verbose_name='Контент')
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, default=1)
     answer = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"Question for {self.product.name}"
+
+    class Meta:
+        verbose_name = 'Вопрос'
+        verbose_name_plural = 'Вопросы'
 
 
 class Characteristic(models.Model):
@@ -109,6 +124,11 @@ class Characteristic(models.Model):
     def __str__(self):
         return f"{self.name} ({self.unit})" if self.unit else self.name
 
+    class Meta:
+
+        verbose_name = 'Характеристика'
+        verbose_name_plural = 'Характеристики'
+
 
 class ProductCharacteristicValue(models.Model):
     product = models.ForeignKey('Product', related_name='characteristic_values', on_delete=models.CASCADE)
@@ -118,11 +138,18 @@ class ProductCharacteristicValue(models.Model):
     def __str__(self):
         return f"{self.characteristic.name}: {self.value} {self.characteristic.unit or ''}"
 
+    class Meta:
+        ordering = ['characteristic']
+        verbose_name = 'Характеристики товара'
+        verbose_name_plural = 'Характеристики товара'
+
 
 class WishList(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     products = models.ManyToManyField('Product', related_name='wishlists')
 
-
+    class Meta:
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранное'
 
 

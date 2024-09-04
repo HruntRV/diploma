@@ -2,16 +2,22 @@
 {% load static %}
 
 {% block content %}
-<div class="group-products-wrap">
+<div class="group-products-wrap d-flex flex-wrap justify-content-center">
 
     {% for category in categories %}
+   {% if category.parent %}
+    <div class="category-wrap text-center">
 
-    <div class="category-wrap">
-        <a href="{{category.get_absolute_url}}">
-    <img src="#" alt="category_img">
-    <p>{{category.name}}</p>
-        </a>
-</div>
+            <a href="{{category.get_absolute_url}}" class="text-decoration-none">
+                {% if category.image %}
+        <img src="{{ category.image.url }}" alt="category_img" class="img-fluid" style="max-width: 150px;">
+                {% else %}
+        <img src="{% static 'market/images/default_avatar.png' }}" alt="category_img" class="img-fluid" style="max-width: 150px;">
+                {% endif %}
+        <p class="mt-2">{{category.name}}</p>
+            </a>
+    </div>
+     {% endif %}
 {% endfor %}
 </div>
 

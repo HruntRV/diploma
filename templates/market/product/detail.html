@@ -5,12 +5,12 @@
 
 {% block content %}
 
-    <div class="product-wrap" style="width: 50%">
+    <div class="product-wrap" style="width: 50%; margin: auto;">
         <a href="{{ product.get_absolute_url }}">
-        <h2>{{ product.name }}</h2>
+        <h2 class="text-center">{{ product.name }}</h2>
         </a>
 
-            <div id="carouselExample" class="carousel slide">
+            <div id="carouselExample" class="carousel slide mb-4">
               <div class="carousel-inner">
                 {% for image in product.images.all %}
                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
@@ -28,13 +28,20 @@
               </button>
             </div>
 
-        <p>{{ product.price }}</p>
+        <p class="text-center text-muted">{{ product.price }}</p>
     </div>
         {{ product.description|linebreaks }}
-            <form action="{% url 'cart:cart_add' product.id %}" method="POST">
+            <form action="{% url 'cart:cart_add' product.id %}" method="POST" class="text-center">
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
                 {% csrf_token %}
                 {{cart_product_form}}
-                <button type="submit" class="btn btn-outline-primary">Add to cart</button>
+                <button type="submit" class="btn btn-outline-primary">Добавить в корзину</button>
                 <a href="javascript:void(0);" class="wishlist-icon {% if in_wishlist %}added-to-wishlist{% endif %}" data-product-id="{{ product.id }}">
                      <img class="fa-fa-heart" src="{% static 'market/images/heart.png' %}">
                 </a>
@@ -82,7 +89,7 @@
                         <h5>Зарегистрируйтесь или войдите чтобы оставить отзыв</h5>
                         {% endif %}
                         {% for comment in comments %}
-                        <div class="media">
+                        <div class="media mt-3">
                             <a class="pull-left" href="#">
                                 <img class="media-object" src="http://placehold.it/64x64" alt="">
                             </a>
@@ -97,7 +104,7 @@
                     </div>
                     <div class="tab-pane fade" id="nav-Задать_вопрос" role="tabpanel" aria-labelledby="nav-Задать_вопрос-tab" tabindex="0">
                         {% if user.is_authenticated %}
-                        <form class="well" role="form" name="query" action="{% url 'market:product_detail' product.id product.slug %}" method="POST">
+                        <form class="well mt-3" role="form" name="query" action="{% url 'market:product_detail' product.id product.slug %}" method="POST">
                             {% csrf_token %}
                             <h4>Задать вопрос:</h4>
                             <div class="form-group">
@@ -109,7 +116,7 @@
                         <h5>Зарегистрируйтесь или войдите чтобы задать вопрос</h5>
                         {% endif %}
                         {% for question in questions %}
-                        <div class="media">
+                        <div class="media mt-3">
                             <a class="pull-left" href="#">
                                 <img class="media-object" src="http://placehold.it/64x64" alt="">
                             </a>
