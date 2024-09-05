@@ -1,0 +1,41 @@
+{% extends "market/base.html" %}
+{% load static %}
+{% block content %}
+<h2 style="border-bottom: 4px solid #293859">История покупок</h2>
+
+
+{% if order_items %}
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col" style="text-align: center;">Изображение</th>
+        <th scope="col" style="text-align: center;">Товар</th>
+        <th scope="col" style="text-align: center;">Количество</th>
+        <th scope="col" style="text-align: center;">Цена</th>
+        <th scope="col" style="text-align: center;">Сумма</th>
+        <th scope="col" style="text-align: center;">Дата</th>
+    </tr>
+    </thead>
+    <tbody>
+ {% for item in order_items %}
+    <tr>
+        <td>
+            <a href="{{ item.product.get_absolute_url }}">
+                <div>
+                    <img src="{{ item.product.images.all.0.image.url }}" alt="image" style="width: 100px; height: auto">
+                </div>
+            </a>
+        </td>
+<td style="text-align: center; vertical-align: middle;">{{item.product.name}}</td>
+<td style="text-align: center; vertical-align: middle;">{{item.quantity}}</td>
+<td style="text-align: center; vertical-align: middle;">{{item.price}}</td>
+<td style="text-align: center; vertical-align: middle;">{{item.total_price}}</td>
+<td style="text-align: center; vertical-align: middle;">{{item.order.created}}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% else %}
+    <p>No purchase history available.</p>
+{% endif %}
+{% endblock %}

@@ -5,15 +5,13 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from django.utils.timezone import now
-from django.views import View
-
 from .forms import ProductFilterForm, CommentForm, QuestionForm, UpdateForm
 from .models import Profile, Category, Product, ProductCharacteristicValue, Comment, Question, WishList
 from django.db.models import Q
 from cart.forms import CartAddProductForm
 from market.models import Product, Category
 from django.conf import settings
+from orders.models import OrderItem, Order
 
 
 def contact(request):
@@ -23,7 +21,7 @@ def contact(request):
         message = request.POST.get('message')  # User's message
 
         # Compose the email to yourself
-        subject = f"Contact form submission from {name}"
+        subject = f"Отправка контактной формы от {name}"
         message_body = f"Name: {name}\nEmail: {user_email}\n\nMessage:\n{message}"
 
         # Send the email to yourself
@@ -34,8 +32,8 @@ def contact(request):
             [settings.DEFAULT_FROM_EMAIL],  # To: your email address (elerom.dp@gmail.com)
             fail_silently=False,
         )
-        confirmation_subject = "Thank you for contacting us"
-        confirmation_message = f"Hi {name},\n\nThank you for reaching out. We have received your message and will get back to you soon."
+        confirmation_subject = "Спасибо за обращение."
+        confirmation_message = f"Hi {name},\n\nМы получили Ваше сообщение и в скором времени свяжемся с Вами"
 
         send_mail(
             confirmation_subject,
@@ -45,7 +43,7 @@ def contact(request):
             fail_silently=False,
         )
 
-        return HttpResponse("Thank you for your message. We will get back to you soon.")
+        return HttpResponse("Спасибо за обращение. В скором времени мы свяжемся с Вами.")
 
     return render(request, 'market/contact.html')
 
@@ -167,7 +165,10 @@ def search(request):
         )
     else:
         products = Product.objects.all()
-    context = {'products': products}
+    context = {
+        'products': products,
+        'search_res': True
+               }
     return render(request, 'market/product/list.html', context)
 
 
@@ -245,7 +246,10 @@ def wishlist(request):
     user = request.user
     wishlist = get_object_or_404(WishList, user=user)
     products = wishlist.products.all()
-    context = {'products': products}
+    context = {
+        'products': products,
+        'is_wishlist': True
+    }
     return render(request, "market/product/list.html", context)
 
 
@@ -275,4 +279,10 @@ def add_to_wishlist(request, product_id):
     return JsonResponse({'status': status})
 
 
-
+@login_required
+def purchase_history(request):
+    user = request.user
+    orders = Order.objects.filter(email=user.email)
+    order_items = OrderItem.objects.filter(order__in=orders)
+    context = {'order_items': order_items}
+    return render(request, 'market/purchase_history.html', context)

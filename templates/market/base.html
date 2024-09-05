@@ -72,7 +72,7 @@
                             <ul class="dropdown-menu">
                                 {% for subcategory in category.subcategories.all %}
                                     {% if subcategory.parent == category %}
-                                        <li><a class="dropdown-item" href="{% url 'market:product_list_by_category' subcategory.slug %}">{{subcategory.name}}</a></li>
+                                        <li style="margin: 0, 5px;"><a class="dropdown-item" href="{% url 'market:product_list_by_category' subcategory.slug %}">{{subcategory.name}}</a></li>
                                     {% endif %}
                                 {% endfor %}
                             </ul>
@@ -144,7 +144,7 @@
             <div id="profileInfo" class="profile-info">
                 <ul>
                     <li><a href="{% url 'market:profile' %}">Профиль</a><li>
-                    <li>История покупок</li>
+                    <li><a href="{% url 'market:purchase_history' %}">История покупок</li>
 
                     <li><a href="{% url 'market:wishlist' %}">Избранное</a></li>
                     <li>

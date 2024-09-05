@@ -3,30 +3,30 @@
 
 {% block content %}
 {% if profile_data.avatar %}
-<img src="{{ profile_data.avatar.url }}">
+<img src="{{ profile_data.avatar.url }}" style="max-width: 150px">
 {% else %}
 <img src="{% static 'market/images/default_avatar.png' %}" alt="Default Profile Image">
 {% endif %}
-    <p><b>Username:</b> {{profile_data.user.username}}</p>
+    <p><b>Имя пользователя:</b> {{profile_data.user.username}}</p>
 {% if profile_data.user.first_name %}
-    <p><b>First name:</b> {{profile_data.user.first_name}}</p>
+    <p><b>Имя:</b> {{profile_data.user.first_name}}</p>
 {% endif %}
 {% if profile_data.user.lastname %}
-    <p><b>Last name</b> {{profile_data.user.last_name}}</p>
+    <p><b>Фамилия</b> {{profile_data.user.last_name}}</p>
 {% endif %}
 {% if profile_data.gender %}
-    <p><b>Gender:</b> {{profile_data.gender}}</p>
+    <p><b>Пол:</b> {{profile_data.gender}}</p>
 {% endif %}
-    <p><b>Email:</b> {{ profile_data.user.email }}</p>
+    <p><b>Почта:</b> {{ profile_data.user.email }}</p>
 {% if profile_data.phone %}
-    <p><b>Phone:</b> {{ profile_data.phone }}</p>
+    <p><b>Телефон:</b> {{ profile_data.phone }}</p>
 {% endif %}
 {% if profile_data.country %}
-    <p><b>Country:</b> {{ profile_data.country }}</p>
+    <p><b>Страна:</b> {{ profile_data.country }}</p>
 {% endif %}
 {% if profile_data.city %}
-    <p><b>City:</b> {{ profile_data.city }}</p>
+    <p><b>Город:</b> {{ profile_data.city }}</p>
 {% endif %}
 
-    <a class="btn btn-primary" href="{% url 'market:update_profile' %}">Update profile<span class="glyphicon glyphicon-chevron-right"></span></a>
+    <a class="btn btn-primary" href="{% url 'market:update_profile' %}">Редактировать<span class="glyphicon glyphicon-chevron-right"></span></a>
 {% endblock %}

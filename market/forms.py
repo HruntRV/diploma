@@ -87,6 +87,13 @@ class UpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password']
+        labels = {
+            'username': 'Имя пользователя',
+            'first_name': 'Имя',
+            'last_name': 'Фамилия',
+            'email': 'Почта',
+            'password': 'Пароль',
+        }
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -95,11 +102,11 @@ class UpdateForm(forms.ModelForm):
             'password': forms.PasswordInput(attrs={'class': 'form-control'}),
         }
 
-    Gender = forms.ChoiceField(choices=gender_choice, widget=forms.Select(attrs={'class': 'form-control'}), required=False)
-    Phone = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
-    Country = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
-    City = forms.ChoiceField(choices=city_choice, widget=forms.Select(attrs={'class': 'form-control'}), required=False)
-    Password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    Gender = forms.ChoiceField(choices=gender_choice, label='Пол', widget=forms.Select(attrs={'class': 'form-control'}), required=False)
+    Phone = forms.CharField(max_length=15, label='Телефон', widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    Country = forms.CharField(max_length=50, label='Страна', widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    City = forms.ChoiceField(choices=city_choice, label='Город', widget=forms.Select(attrs={'class': 'form-control'}), required=False)
+    Password_confirm = forms.CharField(label='Подтверждение пароля', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     Avatar = forms.ImageField(
         required=False,
         label='Profile Picture',

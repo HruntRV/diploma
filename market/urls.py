@@ -20,6 +20,8 @@ urlpatterns = [
     path('search', views.search, name='search'),
     path('update_profile', views.update_profile, name='update_profile'),
     path('wishlist', views.wishlist, name='wishlist'),
-    path('wishlist/add/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist')
+    path('wishlist/add/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
+    path('purchase_history', views.purchase_history, name='purchase_history')
+
 
     ]

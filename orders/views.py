@@ -20,5 +20,3 @@ def order_create(request):
     else:
         form = OrderCreateForm()
     return render(request, 'orders/create.html', {'cart': cart, 'form': form})
-
-# Create your views here.

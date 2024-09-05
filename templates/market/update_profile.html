@@ -1,7 +1,7 @@
 {% extends 'market/base.html' %}
 
 {% block content %}
-<h2>Update your data</h2>
+<!--<h2>Update your data</h2>-->
 
 
 <form method="POST" action="{% url 'market:update_profile' %}" enctype='multipart/form-data'>
@@ -67,6 +67,6 @@
             {{ form.Avatar }}
     </div>
 
-    <button type="submit">Update</button>
+    <button type="submit">Обновить</button>
 </form>
 {% endblock %}

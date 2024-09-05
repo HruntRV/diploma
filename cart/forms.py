@@ -16,7 +16,7 @@ class CartAddProductForm(forms.Form):
         quantity = self.cleaned_data.get('quantity')
         if self.product and quantity > self.product.stock:  # Assuming product has a 'stock' field
             raise forms.ValidationError(
-                format_html("<b>Only {} items available in stock.</b>", self.product.stock),
+                format_html("<b>Доступно {} шт.</b>", self.product.stock),
                 code='invalid'
             )
         return quantity
