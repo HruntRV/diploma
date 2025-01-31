@@ -14,7 +14,7 @@
             countdown -= 1;
             countdownElement.textContent = countdown;
             if (countdown <= 0) {
-                window.location.href = "{% url 'index' %}";
+                window.location.href = "{% url 'market:home' %}";
             }
         }
 

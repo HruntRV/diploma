@@ -74,8 +74,8 @@ def registration(request):
                 new_user.save()
                 new_profile = Profile(user=new_user, phone=phone)
                 new_profile.save()
-                login(request, new_user)  # Automatically log the user in
-                return redirect('registration_success')  # Redirect to success page
+                login(request, new_user, backend='django.contrib.auth.backends.ModelBackend')  # Automatically log the user in
+                return redirect('market:registration_success')  # Redirect to success page
             else:
                 return HttpResponse("User with this username or email already exists", status=400)
         else:
@@ -244,7 +244,10 @@ def update_profile(request):
 
 def wishlist(request):
     user = request.user
-    wishlist = get_object_or_404(WishList, user=user)
+    try:
+        wishlist = WishList.objects.get(user=user)
+    except:
+        return render(request, "market/product/list.html")
     products = wishlist.products.all()
     context = {
         'products': products,

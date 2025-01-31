@@ -28,10 +28,10 @@
               </button>
             </div>
 
-        <p class="text-center text-muted">{{ product.price }}</p>
+        <p class="fw-medium fs-3 text-center text-muted">{{ product.price }}</p>
     </div>
         {{ product.description|linebreaks }}
-            <form action="{% url 'cart:cart_add' product.id %}" method="POST" class="text-center">
+            <form action="{% url 'cart:cart_add' product.id %}" method="POST" class="mb-2 text-center">
                 {% if form.errors %}
                 <div class="alert alert-danger">
                     {% for error in form.non_field_errors %}
@@ -41,7 +41,7 @@
                 {% endif %}
                 {% csrf_token %}
                 {{cart_product_form}}
-                <button type="submit" class="btn btn-outline-primary">Добавить в корзину</button>
+                <button type="submit" class="ms-2 btn btn-outline-primary">Добавить в корзину</button>
                 <a href="javascript:void(0);" class="wishlist-icon {% if in_wishlist %}added-to-wishlist{% endif %}" data-product-id="{{ product.id }}">
                      <img class="fa-fa-heart" src="{% static 'market/images/heart.png' %}">
                 </a>

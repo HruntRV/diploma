@@ -4,6 +4,7 @@
 {% block content %}
 <style>
 .contain {
+
     width: 400px;
     margin: 10px 20px;
     padding: 20px;
@@ -11,7 +12,6 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
 h1 {
     text-align: center;
     margin-bottom: 20px;
@@ -68,7 +68,7 @@ support@web.ua
 
     <div class="contain">
         <h3>Связаться с нами</h3>
-        <form method="POST" action="{% url 'market:contact' %}">
+        <form style="display:flex; flex-direction:column;" method="POST" action="{% url 'market:contact' %}">
             {% csrf_token %}
             <div class="form-group">
                 <label for="name">Имя:</label>

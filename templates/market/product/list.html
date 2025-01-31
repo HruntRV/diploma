@@ -20,16 +20,17 @@
         <div>
              <img src="{{ product.images.all.0.image.url }}" alt="image">
         </div>
-
+        <div style="width: 100%; margin-top: 10px; height: 10%">
             <h5>{{ product.name }}</h5>
-        </a>
+        </div>
+         </a>
         <div class="item-buy">
             <p>{{ product.price }}</p>
             <form action="{% url 'cart:cart_add' product.id %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="quantity" value="1">
                 <input type="hidden" name="update" value="false">
-                <button type="submit">Купить</button>
+                <button class="ms-2" type="submit">Купить</button>
             </form>
 
         </div>
