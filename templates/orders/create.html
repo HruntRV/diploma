@@ -1,19 +1,19 @@
 {% extends "market/base.html" %}
 {% load static %}
 {% block content %}
-<div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9;">
-    <h3 style="text-align: center; color: #333;">Ваш заказ</h3>
-    <ul style="list-style-type: none; padding: 0;">
+<div class="order-container">
+    <h3>Ваш заказ</h3>
+    <ul>
         {% for item in cart %}
-        <li style="display: flex; justify-content: center; margin-bottom: 10px;">
+        <li>
             <span><b>{{ item.quantity }}</b>x {{ item.product.name }}</span>
 <!--            <span style="font-weight: bold;">{{ item.total_price }}</span>-->
         </li>
         {% endfor %}
     </ul>
-    <p style="text-align: right; font-size: 18px; margin-top: 20px;">Всего: <b>{{ cart.get_total_price }} грн</b></p>
+    <p>Всего: <b>{{ cart.get_total_price }} грн</b></p>
 
-    <form action="." method="post" style="margin-top: 20px; background-color: #fbfafa; padding: 20px; border: 1px solid #ccc; border-radius: 5px;">
+    <form action="." method="post">
         {% csrf_token %}
         <div class="form-row">
         <div class="form-group col-md-6">

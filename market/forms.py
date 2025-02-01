@@ -82,7 +82,7 @@ class UpdateForm(forms.ModelForm):
         ("Khmelnytskyi", "Khmelnytskyi"),
         ("Uzhhorod", "Uzhhorod")
     ]
-    gender_choice = [('M', 'Male'), ('F', 'Female'),]
+    gender_choice = [('М', 'Мужчина'), ('Ж', 'Женщина'),]
 
     class Meta:
         model = User

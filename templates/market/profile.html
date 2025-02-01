@@ -3,9 +3,9 @@
 
 {% block content %}
 {% if profile_data.avatar %}
-<img src="{{ profile_data.avatar.url }}" style="max-width: 150px">
+<img class="profile-img" src="{{ profile_data.avatar.url }}">
 {% else %}
-<img src="{% static 'market/images/default_avatar.png' %}" alt="Default Profile Image">
+<img class="profile-img"  src="{% static 'market/images/default_avatar.png' %}" alt="Default Profile Image">
 {% endif %}
     <p><b>Имя пользователя:</b> {{profile_data.user.username}}</p>
 {% if profile_data.user.first_name %}

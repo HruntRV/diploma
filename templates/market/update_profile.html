@@ -1,72 +1,52 @@
 {% extends 'market/base.html' %}
-
+{% load static %}
 {% block content %}
-<!--<h2>Update your data</h2>-->
 
-
-<form method="POST" action="{% url 'market:update_profile' %}" enctype='multipart/form-data'>
+<form class="d-flex flex-column" method="POST" action="{% url 'market:update_profile' %}" enctype='multipart/form-data'>
         {% csrf_token %}
 
-  <div class="form-row">
-    <div class="form-group col-md-6">
+
         {{ form.username.label_tag }}
         {{ form.username }}
-    </div>
-    <div class="form-group col-md-6">
-       {{ form.email.label_tag }}
+        {{ form.email.label_tag }}
         {{ form.email }}
-    </div>
-  </div>
 
-  <div class="form-row">
-    <div class="form-group col-md-6">
         {{ form.first_name.label_tag }}
-         {{ form.first_name }}
-    </div>
-    <div class="form-group col-md-6">
-           {{ form.last_name.label_tag }}
-            {{ form.last_name }}
-    </div>
-  </div>
+        {{ form.first_name }}
 
-  <div class="form-row">
-    <div class="form-group col-md-6">
-             {{ form.password.label_tag }}
-            {{ form.password }}
-    </div>
-    <div class="form-group col-md-6">
-             {{ form.Password_confirm.label_tag }}
-            {{ form.Password_confirm }}
-    </div>
-  </div>
+        {{ form.last_name.label_tag }}
+        {{ form.last_name }}
 
-  <div class="form-row">
-    <div class="form-group col-md-6">
-             {{ form.Gender.label_tag }}
-            {{ form.Gender }}
-    </div>
-    <div class="form-group col-md-6">
-             {{ form.Phone.label_tag }}
-            {{ form.Phone }}
-    </div>
-  </div>
+        {{ form.password.label_tag }}
+        {{ form.password }}
 
-  <div class="form-row">
-    <div class="form-group col-md-6">
-             {{ form.Country.label_tag }}
-            {{ form.Country }}
-    </div>
-    <div class="form-group col-md-6">
-             {{ form.City.label_tag }}
-            {{ form.City }}
-    </div>
-  </div>
+        {{ form.Password_confirm.label_tag }}
+        {{ form.Password_confirm }}
 
-    <div class="form-group">
+
+
+        {{ form.Gender.label_tag }}
+        {{ form.Gender }}
+
+         {{ form.Phone.label_tag }}
+         {{ form.Phone }}
+
+
+
+        {{ form.Country.label_tag }}
+        {{ form.Country }}
+
+        {{ form.City.label_tag }}
+        {{ form.City }}
+
+
+
             {{ form.Avatar.label_tag }}
             {{ form.Avatar }}
-    </div>
 
-    <button type="submit">Обновить</button>
+    <button class="btn btn-primary" type="submit">Обновить</button>
+
+
 </form>
+
 {% endblock %}
